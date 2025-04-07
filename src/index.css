@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body,
+html {
+  @apply h-dvh max-h-dvh;
+  @apply overflow-hidden;
+}
+#root {
+  @apply overflow-hidden;
+  @apply h-dvh max-h-dvh;
+}

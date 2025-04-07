@@ -1,0 +1,37 @@
+{
+  "app_name": "Plugghjälpen - Språk",
+  "languages": {
+    "en": "Engelska",
+    "de": "Tyska",
+    "es": "Spanska",
+    "fr": "Franska"
+  },
+  "assistant_name": "Plugghästen",
+  "assistant_description": "Behöver du öva inför ett prov?  \nHar du fått en glosläxa?\n\n**Välj språk här nedan, så hjälper jag dig plugga!**",
+  "user_name": "Du",
+  "system_name": "Vaktmästarn",
+  "pick_language": "För att kunna fortsätta behöver jag ta del av din läxa. Du kan skicka den till mig genom att klicka här nedan.",
+  "new_session": "Starta från början",
+  "selected_language": {
+    "es": "Español, ¡qué divertido!",
+    "en": "English, what fun!",
+    "de": "Deutsch, was für ein Spaß!",
+    "fr": "Français, que de plaisir!"
+  },
+  "upload": {
+    "camera": "Ta en bild",
+    "browse": "Välj fil(er)"
+  },
+  "start_chatting": "**Tack!**\rNu kan du börja börja ställa dina frågor.\nDu hittar några exempel här nedan.",
+  "question": {
+    "title": "Vanliga frågor",
+    "1": "Förhör mig på glosor",
+    "2": "Ge mig förslag på fraser",
+    "3": "Förhör mig på fraser"
+  },
+  "take_a_picture": "Ta bild",
+  "reset_image": "Ta ny bild",
+  "select_image": "Välj bild",
+  "could_not_upload": "Kunde inte ladda upp filen",
+  "my_files": "Mina filer"
+}
