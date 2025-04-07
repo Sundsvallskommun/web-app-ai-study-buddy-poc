@@ -5,6 +5,7 @@ import { VitePWA } from "vite-plugin-pwa";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
+  const hosts = env.VITE_HOSTS ? env.VITE_HOSTS.split(",") : [];
   return {
     base: env.VITE_BASE_PATH || "/",
     server: {
@@ -12,6 +13,7 @@ export default defineConfig(({ mode }) => {
     },
     preview: {
       port: env.VITE_PORT ? parseInt(env.VITE_PORT, 10) : undefined,
+      allowedHosts: hosts,
     },
     plugins: [
       react(),
