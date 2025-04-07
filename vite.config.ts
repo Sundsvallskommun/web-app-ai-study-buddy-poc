@@ -7,7 +7,12 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   return {
     base: env.VITE_BASE_PATH || "/",
-
+    server: {
+      port: env.VITE_PORT ? parseInt(env.VITE_PORT, 10) : undefined,
+    },
+    preview: {
+      port: env.VITE_PORT ? parseInt(env.VITE_PORT, 10) : undefined,
+    },
     plugins: [
       react(),
       VitePWA({
