@@ -135,10 +135,6 @@ export const Camera: React.FC<CameraProps> = ({
                 autoPlay
                 playsInline
                 muted
-                style={{
-                  top: `-${offsets.y}px`,
-                  left: `-${offsets.x}px`,
-                }}
               />
 
               <div
