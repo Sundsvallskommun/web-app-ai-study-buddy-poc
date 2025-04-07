@@ -8,7 +8,9 @@ import { useTranslation } from "react-i18next";
 
 const CAPTURE_OPTIONS = {
   audio: false,
-  video: true,
+  video: {
+    facingMode: "environment",
+  },
 };
 
 interface CameraProps {

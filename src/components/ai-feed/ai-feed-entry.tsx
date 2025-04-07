@@ -69,10 +69,10 @@ export const AIFeedEntry = React.forwardRef<HTMLLIElement, AIFeedEntryProps>(
     }, [done]);
 
     const FileIcon = ({ type }: { type: string }) => {
-      if (type.includes("image")) {
+      if (type?.includes("image")) {
         return <FileImage />;
       }
-      if (type.includes("application")) {
+      if (type?.includes("application")) {
         return <FileText />;
       }
 
@@ -112,17 +112,21 @@ export const AIFeedEntry = React.forwardRef<HTMLLIElement, AIFeedEntryProps>(
                 </>
               )}
             </div>
-            {showFiles && entry.files && entry.files?.length > 0 ? (
+            {showFiles && entry?.files && entry.files?.length > 0 ? (
               <ul aria-label="filer" className="flex flex-row flex-wrap gap-16">
-                {entry.files?.map((file, index) => (
-                  <li
-                    className="flex items-center gap-8 p-16 text-label-small rounded-groups border-1 border-divider bg-background-100"
-                    key={`file-${index}`}
-                  >
-                    <Icon icon={<FileIcon type={file.mimetype} />} />
-                    {file.name}
-                  </li>
-                ))}
+                {entry.files?.map((file, index) =>
+                  file ? (
+                    <li
+                      className="flex items-center gap-8 p-16 text-label-small rounded-groups border-1 border-divider bg-background-100"
+                      key={`file-${index}`}
+                    >
+                      <Icon icon={<FileIcon type={file?.mimetype} />} />
+                      {file?.name}
+                    </li>
+                  ) : (
+                    <></>
+                  )
+                )}
               </ul>
             ) : (
               <></>
