@@ -70,7 +70,7 @@ export const Main: React.FC = () => {
       label={t("common:app_name")}
       onNewSession={page === 0 ? undefined : () => setPage(0)}
     >
-      <main className="flex w-full overflow-hidden flex-col grow shrink h-full max-h-full justify-end items-center gap-16 md:gap-32">
+      <main className="flex w-full overflow-hidden flex-col grow shrink h-full max-h-full justify-end items-center pb-16 gap-16 md:gap-32">
         {pages[page]}
       </main>
     </DefaultLayout>
