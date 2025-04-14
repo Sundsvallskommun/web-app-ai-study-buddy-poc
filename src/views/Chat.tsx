@@ -1,11 +1,12 @@
 import { Bubble, InputSection } from "@sk-web-gui/ai";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { shallow } from "zustand/shallow";
 import { AIFeed } from "../components/ai-feed";
 import { useAppStore } from "../hooks/appStore";
 import { useAssistantStore } from "../services/assistant-store";
 import { AskAssistant, ChatHistory } from "../types";
-import { useEffect, useRef, useState } from "react";
+import { useThemeQueries } from "@sk-web-gui/react";
 
 export const Chat: React.FC<{
   history: ChatHistory;
@@ -17,6 +18,9 @@ export const Chat: React.FC<{
   const [files] = useAppStore((state) => [state.files]);
   const [info] = useAssistantStore((state) => [state.info], shallow);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const { isMaxPhone } = useThemeQueries();
+
   const handleSendQuery = (query: string) => {
     if (query) {
       sendQuery(query, showBubbles ? files : undefined);
@@ -39,7 +43,7 @@ export const Chat: React.FC<{
   return (
     <>
       <div
-        className="overflow-y-auto grow w-full flex flex-col shrink justify-end"
+        className="overflow-y-auto grow w-full flex flex-col shrink justify-end px-16"
         ref={scrollRef}
       >
         <AIFeed
@@ -51,12 +55,12 @@ export const Chat: React.FC<{
         />
       </div>
       {showBubbles && (
-        <div className="sk-ai-corner-module-feed-questions-wrapper w-full max-w-[1000px] mx-auto">
+        <div className="sk-ai-corner-module-feed-questions-wrapper w-full max-w-[1000px] mx-auto px-16">
           <div className="sk-ai-corner-module-feed-questions-title">
             {t("common:question.title")}
           </div>
 
-          <div className="sk-ai-corner-module-feed-questions flex-row">
+          <div className="sk-ai-corner-module-feed-questions flex-row flex-wrap">
             {questions?.map((question, index) => (
               <Bubble
                 key={`q-bubble-${index}`}
@@ -69,6 +73,7 @@ export const Chat: React.FC<{
         </div>
       )}
       <InputSection
+        isMobile={isMaxPhone}
         value={value}
         onChangeValue={(event) => setValue(event.target.value)}
         placeholder="Skriv till assistanten"

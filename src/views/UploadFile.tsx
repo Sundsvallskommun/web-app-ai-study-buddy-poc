@@ -2,13 +2,13 @@ import { FileUpload, useSnackbar } from "@sk-web-gui/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AIFeed } from "../components/ai-feed";
-import { Camera } from "../components/camera/camera.component";
 import { ImageButton } from "../components/image-button/image-button.component";
 import { WizardArea } from "../components/wizard-area/wizard-area.component";
 import { useAppStore } from "../hooks/appStore";
 import { uploadFile } from "../services/assistant-service";
 import { ChatEntryReference, ChatHistory, FilePublic, Origin } from "../types";
 import { WizardPageProps } from "../types/wizard-page-props.interface";
+import { CameraModal } from "../components/camera-modal/camera-modal.component";
 
 export const UploadFile: React.FC<
   WizardPageProps & {
@@ -24,6 +24,7 @@ export const UploadFile: React.FC<
   }
 > = ({ onNext, history, addOrUpdateHistoryEntry }) => {
   const [done, setDone] = useState(false);
+  const [error, setError] = useState(false);
   const [fileCount, setFileCount] = useState(0);
   const [fullfiles, setFullfiles] = useState<FilePublic[]>([]);
   const [cameraOpen, setCameraOpen] = useState(false);
@@ -50,6 +51,7 @@ export const UploadFile: React.FC<
   }, [selectedLanguage, addOrUpdateHistoryEntry, history]);
 
   const handleFiles = (event: any) => {
+    setError(false);
     setFileCount(event.target.value.length);
     for (let index = 0; index < event.target.value.length; index++) {
       const file = event.target.value?.[index]?.file;
@@ -60,6 +62,7 @@ export const UploadFile: React.FC<
         })
         .catch(() => {
           message({ message: t("common:could_not_upload"), status: "error" });
+          setError(true);
           setFileCount((count) => count - 1);
         });
     }
@@ -77,7 +80,7 @@ export const UploadFile: React.FC<
   };
 
   useEffect(() => {
-    if (fullfiles.length > 0) {
+    if (fullfiles.length > 0 && !error) {
       if (fileCount === files.length) {
         addOrUpdateHistoryEntry(
           "user",
@@ -96,25 +99,32 @@ export const UploadFile: React.FC<
 
   useEffect(() => {
     if (done) {
-      addOrUpdateHistoryEntry(
-        "assistant",
-        t("common:start_chatting"),
-        "2",
-        true
-      );
-      setTimeout(() => {
-        onNext();
-      }, 500);
+      if (!error && fullfiles.length > 0) {
+        addOrUpdateHistoryEntry(
+          "assistant",
+          t("common:start_chatting"),
+          "2",
+          true
+        );
+        setTimeout(() => {
+          onNext();
+        }, 500);
+      } else {
+        setFullfiles([]);
+        setError(false);
+        setDone(false);
+        setCardImage(null);
+      }
     }
   }, [done]);
 
   return (
     <>
-      <div className="overflow-y-auto grow w-full flex flex-col shrink justify-end">
+      <div className="overflow-y-auto grow w-full flex flex-col shrink justify-end px-16">
         <AIFeed history={history} className="w-full max-w-[1000px] mx-auto" />
       </div>
       {cameraOpen && (
-        <Camera
+        <CameraModal
           onCapture={(blob) => setCardImage(blob)}
           onClear={() => setCardImage(null)}
           onSubmit={handlePhoto}

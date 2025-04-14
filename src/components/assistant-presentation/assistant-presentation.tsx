@@ -1,9 +1,8 @@
+import { MarkdownRendered } from "@sk-web-gui/ai";
 import { cx } from "@sk-web-gui/utils";
 import React from "react";
 import { AIFeedAvatar, AssistantInfo } from "../../types";
 import { AssistantAvatar } from "./assistant-avatar";
-import Markdown from "react-markdown";
-import { MarkdownRendered } from "@sk-web-gui/ai";
 
 export interface AssistantPresentationProps
   extends React.ComponentPropsWithoutRef<"div"> {
@@ -45,7 +44,7 @@ export const AssistantPresentation = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cx("sk-ai-assistant-presentation", className)}
+      className={cx("sk-ai-assistant-presentation px-16", className)}
       data-size={size}
       {...rest}
     >

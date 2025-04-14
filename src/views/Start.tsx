@@ -6,12 +6,15 @@ import { useAppStore } from "../hooks/appStore";
 import { useAssistantStore } from "../services/assistant-store";
 import { WizardPageProps } from "../types/wizard-page-props.interface";
 import { AssistantPresentation } from "../components/assistant-presentation/assistant-presentation";
+import { useThemeQueries } from "@sk-web-gui/react";
 
 export const Start: React.FC<WizardPageProps> = ({ onNext }) => {
   const [setSelectedLanguage, assistants] = useAppStore(
     (state) => [state.setSelectedLanguage, state.assistants],
     shallow
   );
+
+  const { isMaxSmallDevice } = useThemeQueries();
 
   const [setSettings, assistant] = useAssistantStore(
     (state) => [state.setSettings, state.info],
@@ -42,7 +45,10 @@ export const Start: React.FC<WizardPageProps> = ({ onNext }) => {
 
   return (
     <>
-      <AssistantPresentation assistant={assistant} />
+      <AssistantPresentation
+        assistant={assistant}
+        size={isMaxSmallDevice ? "sm" : "lg"}
+      />
       <WizardArea>
         <ImageButton
           onClick={() => handleSelectLanguage("en")}

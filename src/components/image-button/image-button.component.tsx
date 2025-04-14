@@ -9,16 +9,16 @@ export const ImageButton: React.FC<ImageButtonProps> = (props) => {
   return (
     <button
       className={cx(
-        "h-56 min-w-56 rounded-button-lg overflow-hidden inline-flex border-1 justify-start border-divider gap-16 hover:bg-background-200",
+        "h-40 min-w-40 md:h-56 md:min-w-56 rounded-button-lg overflow-hidden inline-flex border-1 justify-start border-divider gap-16 hover:bg-background-200",
         className
       )}
       {...rest}
     >
       <span
-        className="w-68 h-56 bg-cover bg-center inline-flex"
+        className="h-40 w-50 md:w-68 md:h-56 bg-cover bg-center inline-flex"
         style={{ backgroundImage: `url(${imageUrl})` }}
       ></span>
-      <span className="h-56 pr-18 grow flex items-center justify-start text-label-medium">
+      <span className="h-40 md:h-56 pr-10 md:pr-18 grow flex items-center justify-start text-label-small md:text-label-medium">
         {children}
       </span>
     </button>
