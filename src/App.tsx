@@ -64,7 +64,7 @@ function App() {
     setInfo({
       name: t("common:assistant_name"),
       description: t("common:assistant_description"),
-      avatar: <Avatar imageUrl={"images/plugghasten.png"} />,
+      avatar: <Avatar imageUrl={`${import.meta.env.VITE_BASE_PATH}images/plugghasten.png`} />,
     });
     setLoaded(true);
   }, [setStream, setApiBaseUrl]);

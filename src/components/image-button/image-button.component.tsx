@@ -16,7 +16,7 @@ export const ImageButton: React.FC<ImageButtonProps> = (props) => {
     >
       <span
         className="h-40 w-50 md:w-68 md:h-56 bg-cover bg-center inline-flex"
-        style={{ backgroundImage: `url(${imageUrl})` }}
+        style={{ backgroundImage: `url(${import.meta.env.VITE_BASE_PATH}${imageUrl})` }}
       ></span>
       <span className="h-40 md:h-56 pr-10 md:pr-18 grow flex items-center justify-start text-label-small md:text-label-medium">
         {children}
