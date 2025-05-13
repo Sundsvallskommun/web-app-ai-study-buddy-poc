@@ -70,9 +70,20 @@ export const UploadFile: React.FC<
 
   const handlePhoto = () => {
     if (cardImage) {
-      const image = new File([cardImage], "image.png", { type: "image/png" });
+
+      const base64Data = cardImage.toString();
+      const byteString = atob(base64Data.split(",")[1]);
+      
+      const byteArray = new Uint8Array(byteString.length);
+      for (let i = 0; i < byteString.length; i++) {
+        byteArray[i] = byteString.charCodeAt(i);
+      }
+      
+      const blob = new Blob([byteArray], { type: "image/jpeg" });
+      const file = new File([blob], "image.jpeg", { type: "image/jpeg" });
+
       setFileCount(1);
-      uploadFile(image).then((res) => {
+      uploadFile(file).then((res) => {
         addFile({ id: res.id });
         setFullfiles((files) => [...files, res]);
       });
