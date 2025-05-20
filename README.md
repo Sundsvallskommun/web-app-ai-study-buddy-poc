@@ -1,30 +1,59 @@
-# React + TypeScript + Vite
+# Study buddy - POC
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+En testapp för att prova på konceptet med AI-assistent som läxhjälp.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Installera appen:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```
+yarn
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Skapa en env-fil genom att kopiera exemplet.
+
+```
+cp .env.example.env .env
+```
+
+Appen pratar med [Intric](https://www.intric.ai/) via [AI Proxy api](https://github.com/Sundsvallskommun/web-app-intric-backend).
+
+Lägg in dina assistenter i din proxy och ange dom i din env:
+
+```
+VITE_ASSISTANT_EN=
+VITE_HASH_EN=
+VITE_APPLICATION_EN=
+VITE_ASSISTANT_DE=
+VITE_HASH_DE=
+VITE_APPLICATION_DE=
+VITE_ASSISTANT_ES=
+VITE_HASH_ES=
+VITE_APPLICATION_ES=
+VITE_ASSISTANT_FR=
+VITE_HASH_FR=
+VITE_APPLICATION_FR=
+```
+
+Du behöver även ange urlen till din instans av AI proxy apit.
+
+```
+VITE_INTRIC_API_BASE_URL=
+```
+
+Stara sedan utvecklingsmiljön:
+
+```
+yarn dev
+```
+
+För produktion kör du
+
+```
+yarn build
+yarn preview
+```
+
+### React + TypeScript + Vite
+
+Appen är byggd med [React](https://react.dev/), [Typescript](https://www.typescriptlang.org/) och [Vite](https://vite.dev/).
