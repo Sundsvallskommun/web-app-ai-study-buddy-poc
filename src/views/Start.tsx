@@ -49,7 +49,7 @@ export const Start: React.FC<WizardPageProps> = ({ onNext }) => {
         assistant={assistant}
         size={isMaxSmallDevice ? "sm" : "lg"}
       />
-      <WizardArea>
+      <WizardArea className="sm:grid-cols-2 max-w-[600px]">
         <ImageButton
           onClick={() => handleSelectLanguage("en")}
           imageUrl="images/en.png"
