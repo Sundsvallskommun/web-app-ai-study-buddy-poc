@@ -1,11 +1,13 @@
 import { FileUpload, useSnackbar } from "@sk-web-gui/react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { shallow } from "zustand/shallow";
 import { AIFeed } from "../components/ai-feed";
 import { ImageButton } from "../components/image-button/image-button.component";
 import { WizardArea } from "../components/wizard-area/wizard-area.component";
 import { useAppStore } from "../hooks/appStore";
 import { uploadFile } from "../services/assistant-service";
+import { useAssistantStore } from "../services/assistant-store";
 import { ChatEntryReference, ChatHistory, FilePublic, Origin } from "../types";
 import { WizardPageProps } from "../types/wizard-page-props.interface";
 import { CameraModal } from "../components/camera-modal/camera-modal.component";
@@ -34,6 +36,7 @@ export const UploadFile: React.FC<
     state.addFile,
     state.files,
   ]);
+  const [info] = useAssistantStore((state) => [state.info], shallow);
   const { t } = useTranslation();
 
   const message = useSnackbar();
@@ -70,15 +73,14 @@ export const UploadFile: React.FC<
 
   const handlePhoto = () => {
     if (cardImage) {
-
       const base64Data = cardImage.toString();
       const byteString = atob(base64Data.split(",")[1]);
-      
+
       const byteArray = new Uint8Array(byteString.length);
       for (let i = 0; i < byteString.length; i++) {
         byteArray[i] = byteString.charCodeAt(i);
       }
-      
+
       const blob = new Blob([byteArray], { type: "image/jpeg" });
       const file = new File([blob], "image.jpeg", { type: "image/jpeg" });
 
@@ -132,7 +134,13 @@ export const UploadFile: React.FC<
   return (
     <>
       <div className="overflow-y-auto grow w-full flex flex-col shrink justify-end px-16">
-        <AIFeed history={history} className="w-full max-w-[1000px] mx-auto" />
+        <AIFeed
+          history={history}
+          avatars={{
+            assistant: typeof info?.avatar === "object" ? info.avatar : <></>,
+          }}
+          className="w-full max-w-[1000px] mx-auto"
+        />
       </div>
       {cameraOpen && (
         <CameraModal
