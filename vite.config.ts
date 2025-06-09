@@ -19,8 +19,8 @@ export default defineConfig(({ mode }) => {
       react(),
       VitePWA({
         manifest: {
-          short_name: "Plugghästen",
-          name: "Plugghästen från Sundsvall Kommun",
+          short_name: "Studiekompisen",
+          name: "Studiekompisen från Sundsvall Kommun",
           description: "En app som hjälper dig plugga språk",
           icons: [
             {
