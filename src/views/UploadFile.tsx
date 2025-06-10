@@ -9,6 +9,7 @@ import { uploadFile } from "../services/assistant-service";
 import { ChatEntryReference, ChatHistory, FilePublic, Origin } from "../types";
 import { WizardPageProps } from "../types/wizard-page-props.interface";
 import { CameraModal } from "../components/camera-modal/camera-modal.component";
+import { TextModal } from "../components/text-modal/text-modal.component";
 
 export const UploadFile: React.FC<
   WizardPageProps & {
@@ -28,7 +29,9 @@ export const UploadFile: React.FC<
   const [fileCount, setFileCount] = useState(0);
   const [fullfiles, setFullfiles] = useState<FilePublic[]>([]);
   const [cameraOpen, setCameraOpen] = useState(false);
+  const [textOpen, setTextOpen] = useState(false);
   const [cardImage, setCardImage] = useState<Blob>(null);
+  const [cardText, setCardText] = useState<string>(null);
   const [selectedLanguage, addFile, files] = useAppStore((state) => [
     state.selectedLanguage,
     state.addFile,
@@ -70,17 +73,30 @@ export const UploadFile: React.FC<
 
   const handlePhoto = () => {
     if (cardImage) {
-
       const base64Data = cardImage.toString();
       const byteString = atob(base64Data.split(",")[1]);
-      
+
       const byteArray = new Uint8Array(byteString.length);
       for (let i = 0; i < byteString.length; i++) {
         byteArray[i] = byteString.charCodeAt(i);
       }
-      
+
       const blob = new Blob([byteArray], { type: "image/jpeg" });
       const file = new File([blob], "image.jpeg", { type: "image/jpeg" });
+
+      setFileCount(1);
+      uploadFile(file).then((res) => {
+        addFile({ id: res.id });
+        setFullfiles((files) => [...files, res]);
+      });
+    }
+  };
+
+  const handleText = () => {
+    if (cardText) {
+      const file = new File(["\ufeff" + cardText], "text", {
+        type: "text/plain:charset=UTF-8",
+      });
 
       setFileCount(1);
       uploadFile(file).then((res) => {
@@ -93,14 +109,16 @@ export const UploadFile: React.FC<
   useEffect(() => {
     if (fullfiles.length > 0 && !error) {
       if (fileCount === files.length) {
-        addOrUpdateHistoryEntry(
-          "user",
-          `${t("common:my_files")}:`,
-          "1",
-          true,
-          [],
-          fullfiles
-        );
+        if (!cardText) {
+          addOrUpdateHistoryEntry(
+            "user",
+            `${t("common:my_files")}:`,
+            "1",
+            true,
+            [],
+            fullfiles
+          );
+        }
         setDone(true);
       } else {
         addOrUpdateHistoryEntry("user", "", "1", false);
@@ -125,6 +143,7 @@ export const UploadFile: React.FC<
         setError(false);
         setDone(false);
         setCardImage(null);
+        setCardText(null);
       }
     }
   }, [done]);
@@ -146,13 +165,24 @@ export const UploadFile: React.FC<
         />
       )}
 
+      {textOpen && (
+        <TextModal
+          onChange={(text) => setCardText(text)}
+          onSubmit={handleText}
+          onClose={() => {
+            setCardText(null);
+            setTextOpen(false);
+          }}
+        />
+      )}
+
       <FileUpload.Area
         dragDropEnabled
         relativity="component"
         onChange={handleFiles}
         allowMultiple
       >
-        <WizardArea>
+        <WizardArea className="md:grid-cols-[1fr_1fr_1fr] max-w-[900px]">
           <ImageButton
             imageUrl="images/camera.png"
             className="min-w-[200px] grow"
@@ -168,6 +198,13 @@ export const UploadFile: React.FC<
               {t("common:upload.browse")}
             </ImageButton>
           </FileUpload.Button>
+          <ImageButton
+            imageUrl="images/text.png"
+            className="min-w-[200px] grow"
+            onClick={() => setTextOpen(true)}
+          >
+            {t("common:upload.text")}
+          </ImageButton>
         </WizardArea>
       </FileUpload.Area>
     </>

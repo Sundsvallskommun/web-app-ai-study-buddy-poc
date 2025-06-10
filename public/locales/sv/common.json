@@ -20,7 +20,8 @@
   },
   "upload": {
     "camera": "Ta en bild",
-    "browse": "Välj fil(er)"
+    "browse": "Välj fil(er)",
+    "text": "Skriv in text"
   },
   "start_chatting": "**Tack!**\rNu kan du börja börja ställa dina frågor.\nDu hittar några exempel här nedan.",
   "question": {
@@ -33,5 +34,8 @@
   "reset_image": "Ta ny bild",
   "select_image": "Välj bild",
   "could_not_upload": "Kunde inte ladda upp filen",
-  "my_files": "Mina filer"
+  "my_files": "Mina filer",
+  "enter_text": "Skriv eller klistra in dina glosor här",
+  "submit": "Skicka",
+  "cancel": "Avbryt"
 }
