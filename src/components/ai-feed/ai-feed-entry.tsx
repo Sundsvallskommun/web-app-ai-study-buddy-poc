@@ -125,7 +125,7 @@ export const AIFeedEntry = React.forwardRef<HTMLLIElement, AIFeedEntryProps>(
                     </li>
                   ) : (
                     <></>
-                  )
+                  ),
                 )}
               </ul>
             ) : (
@@ -138,32 +138,42 @@ export const AIFeedEntry = React.forwardRef<HTMLLIElement, AIFeedEntryProps>(
                 size="sm"
                 className="sk-ai-feed-entry-references"
                 inverted={inverted}
-                header={
-                  <span
-                    className="sk-ai-feed-entry-references-header"
-                    data-inverted={inverted}
-                  >
-                    {referenceTitle} ({entry.references?.length || 0})
-                  </span>
-                }
               >
-                <ul
-                  aria-label={referenceTitle}
-                  className="sk-ai-feed-entry-references-list"
-                >
-                  {entry.references?.map((reference, refIndex) => (
-                    <li
-                      className="sk-ai-feed-entry-references-list-item"
-                      key={`ref-${refIndex}`}
+                <Disclosure.Header>
+                  <Disclosure.Title>
+                    {" "}
+                    <span
+                      className="sk-ai-feed-entry-references-header"
+                      data-inverted={inverted}
                     >
-                      <small>
-                        <Link external href={reference.url} inverted={inverted}>
-                          {reference.title}
-                        </Link>
-                      </small>
-                    </li>
-                  ))}
-                </ul>
+                      {referenceTitle} ({entry.references?.length || 0})
+                    </span>
+                  </Disclosure.Title>
+                  <Disclosure.Button />
+                </Disclosure.Header>
+                <Disclosure.Content>
+                  <ul
+                    aria-label={referenceTitle}
+                    className="sk-ai-feed-entry-references-list"
+                  >
+                    {entry.references?.map((reference, refIndex) => (
+                      <li
+                        className="sk-ai-feed-entry-references-list-item"
+                        key={`ref-${refIndex}`}
+                      >
+                        <small>
+                          <Link
+                            external
+                            href={reference.url}
+                            inverted={inverted}
+                          >
+                            {reference.title}
+                          </Link>
+                        </small>
+                      </li>
+                    ))}
+                  </ul>
+                </Disclosure.Content>
               </Disclosure>
             ) : null}
           </div>
@@ -173,5 +183,5 @@ export const AIFeedEntry = React.forwardRef<HTMLLIElement, AIFeedEntryProps>(
         </span>
       </>
     );
-  }
+  },
 );

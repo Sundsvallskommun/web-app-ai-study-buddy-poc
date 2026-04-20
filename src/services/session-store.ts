@@ -1,12 +1,16 @@
 import { createJSONStorage, persist } from "zustand/middleware";
 import { createWithEqualityFn } from "zustand/traditional";
-import { AssistantSession, ChatHistory } from "../types";
+import {
+  AssistantSession,
+  ChatHistory,
+  CursorPaginatedResponseSessionMetadataPublic,
+} from "../types";
 import {
   getAssistantSessionById,
   getAssistantSessions,
   mapSessionMessagesToChatHistory,
 } from "./assistant-service";
-import type { SessionResponse, SessionsResponse } from "../types/response";
+import { SessionPublic } from "@sk-web-gui/ai";
 
 export interface SessionStoreSession extends AssistantSession {
   /**
@@ -35,35 +39,35 @@ const newSession = (): SessionStoreSession => ({
 });
 
 export const mapSessionsResponseToStoreData = (
-  sessions: SessionsResponse
+  sessions: CursorPaginatedResponseSessionMetadataPublic,
 ): Record<string, SessionStoreSession> => {
   return sessions.items.reduce(
     (sessions, session) => ({
       ...sessions,
       [session.id]: {
         id: session.id,
-        created_at: new Date(session.created_at),
-        updated_at: new Date(session.updated_at),
+        created_at: session.created_at ? new Date(session.created_at) : null,
+        updated_at: session.updated_at ? new Date(session.updated_at) : null,
         history: [],
         name: session.name,
         done: true,
         loaded: false,
       },
     }),
-    {}
+    {},
   );
 };
 
 export const mapSessionResponseToStoreData = (
-  session: SessionResponse
+  session: SessionPublic,
 ): SessionStoreSession => {
   return {
     id: session.id,
     name: session.name,
-    created_at: new Date(session.created_at),
-    updated_at: new Date(session.updated_at),
+    created_at: new Date(session.created_at || ""),
+    updated_at: new Date(session.updated_at || ""),
     history: mapSessionMessagesToChatHistory(session.messages),
-    feedback: session.feedback,
+    feedback: session.feedback || undefined,
     done: true,
     loaded: true,
   };
@@ -81,7 +85,7 @@ export interface SessionStore {
    */
   getSession: (
     assistantId: string,
-    id: string
+    id: string,
   ) => Promise<SessionStoreSession | undefined>;
   /**
    * Remove all sessions
@@ -104,7 +108,7 @@ export interface SessionStore {
   updateSession: (
     assistantId: string,
     id: string,
-    sessionHandler: (prev: SessionStoreSession) => SessionStoreSession
+    sessionHandler: (prev: SessionStoreSession) => SessionStoreSession,
   ) => void;
   /**
    * Update the Chat history of a session
@@ -114,7 +118,7 @@ export interface SessionStore {
   updateHistory: (
     assistantId: string,
     id: string,
-    historyHandler: (prev: ChatHistory) => ChatHistory
+    historyHandler: (prev: ChatHistory) => ChatHistory,
   ) => void;
   /**
    * Changes the Id of a session
@@ -287,8 +291,8 @@ export const createSessionStore = (storename: string) => {
       {
         name: `${storename}-sessions`,
         storage: createJSONStorage(() => sessionStorage),
-      }
-    )
+      },
+    ),
   );
 };
 

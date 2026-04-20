@@ -1,11 +1,11 @@
 import {
-  SessionsResponse,
-  AssistantFeedback,
-  Reference,
   ChatEntryReference,
-  SessionMessage,
   ChatHistory,
   ChatHistoryEntry,
+  CursorPaginatedResponseSessionMetadataPublic,
+  InfoBlobPublicNoText,
+  Message,
+  SessionFeedback,
 } from "@sk-web-gui/ai";
 import { SkHeaders, AssistantSettings } from "../types";
 import { useAssistantStore } from "./assistant-store";
@@ -17,10 +17,11 @@ import {
   PaginatedResponseSpaceSparse,
   SpacePublic,
 } from "../types/data-contracts";
+import { ResponseData } from "../types/response";
 
 export const getSkHeaders = (
   options: Partial<AssistantSettings> | undefined,
-  settings: AssistantSettings
+  settings: AssistantSettings,
 ): SkHeaders => {
   const assistantId = options?.assistantId || settings.assistantId || "";
   const user = options?.user || settings.user || "";
@@ -36,12 +37,12 @@ export const getSkHeaders = (
 
   if (!assistantId) {
     throw new Error(
-      "No assistant Id. Either provide one in options, or add one to AssistantContext / Settings"
+      "No assistant Id. Either provide one in options, or add one to AssistantContext / Settings",
     );
   }
   if (!hash) {
     throw new Error(
-      "No hash. Either provide one in options, or add one to AssistantContext / Settings"
+      "No hash. Either provide one in options, or add one to AssistantContext / Settings",
     );
   }
   return {
@@ -53,7 +54,7 @@ export const getSkHeaders = (
 };
 
 export const getAssistants: (
-  options?: Partial<AssistantSettings>
+  options?: Partial<AssistantSettings>,
 ) => Promise<PaginatedResponseAssistantPublic> = async (options) => {
   const { settings, apiBaseUrl } = useAssistantStore.getState();
   if (!apiBaseUrl) {
@@ -97,8 +98,8 @@ export const getAssistantById = async (options?: AssistantSettings) => {
 };
 
 export const getAssistantSessions = async (
-  options?: AssistantSettings
-): Promise<SessionsResponse> => {
+  options?: AssistantSettings,
+): Promise<CursorPaginatedResponseSessionMetadataPublic> => {
   const { settings, apiBaseUrl } = useAssistantStore.getState();
   const skHeaders = getSkHeaders(options, settings);
   if (!apiBaseUrl) {
@@ -123,7 +124,7 @@ export const getAssistantSessions = async (
 
 export const getAssistantSessionById = async (
   sessionId: string,
-  options?: AssistantSettings
+  options?: AssistantSettings,
 ) => {
   const { settings, apiBaseUrl } = useAssistantStore.getState();
   const skHeaders = getSkHeaders(options, settings);
@@ -152,7 +153,7 @@ export const batchQuery = async (
   query: string,
   sessionId?: string,
   options?: AssistantSettings,
-  files?: AskAssistant["files"]
+  files?: AskAssistant["files"],
 ) => {
   const { apiBaseUrl, settings } = useAssistantStore.getState();
 
@@ -180,9 +181,9 @@ export const batchQuery = async (
 };
 
 export const giveFeedback = async (
-  feedback: AssistantFeedback,
+  feedback: SessionFeedback,
   sessionId: string,
-  options?: AssistantSettings
+  options?: AssistantSettings,
 ) => {
   const { settings, apiBaseUrl } = useAssistantStore.getState();
   const skHeaders = getSkHeaders(options, settings);
@@ -210,17 +211,15 @@ export const giveFeedback = async (
 };
 
 export const mapReferencesToChatEntryReferences = (
-  references: Reference[]
+  references: InfoBlobPublicNoText[],
 ): ChatEntryReference[] => {
-  return references
-    ?.filter((reference) => !!reference.metadata.url)
-    .map((reference) => ({
-      title: reference.metadata.title || "",
-      url: reference.metadata.url || "",
-    }));
+  return references?.map((reference) => ({
+    title: reference.metadata.title || "",
+    url: reference.metadata.url || "",
+  }));
 };
 export const mapSessionMessagesToChatHistory = (
-  messages: SessionMessage[]
+  messages: Message[],
 ): ChatHistory => {
   return messages?.reduce((history: ChatHistory, message) => {
     const question: ChatHistoryEntry = {
@@ -241,7 +240,7 @@ export const mapSessionMessagesToChatHistory = (
 };
 
 export const getMySpace = async (
-  options?: Partial<AssistantSettings>
+  options?: Partial<AssistantSettings>,
 ): Promise<SpacePublic> => {
   const { settings, apiBaseUrl } = useAssistantStore.getState();
   const skHeaders = getSkHeaders(options, settings);
@@ -265,7 +264,7 @@ export const getMySpace = async (
 
 export const getSpaces = async (
   personal: boolean,
-  options?: Partial<AssistantSettings>
+  options?: Partial<AssistantSettings>,
 ): Promise<PaginatedResponseSpaceSparse> => {
   const { settings, apiBaseUrl } = useAssistantStore.getState();
   const skHeaders = getSkHeaders(options, settings);
@@ -289,7 +288,7 @@ export const getSpaces = async (
 
 export const getSpace = async (
   spaceId: string,
-  options?: Partial<AssistantSettings>
+  options?: Partial<AssistantSettings>,
 ): Promise<SpacePublic> => {
   const { settings, apiBaseUrl } = useAssistantStore.getState();
   const skHeaders = getSkHeaders(options, settings);
@@ -313,7 +312,7 @@ export const getSpace = async (
 
 export const getSpaceApplications = async (
   space_id: string,
-  options?: Partial<AssistantSettings>
+  options?: Partial<AssistantSettings>,
 ): Promise<Applications> => {
   const { settings, apiBaseUrl } = useAssistantStore.getState();
   const skHeaders = getSkHeaders(options, settings);
@@ -336,7 +335,7 @@ export const getSpaceApplications = async (
 };
 
 export const getMyFiles = async (
-  options?: Partial<AssistantSettings>
+  options?: Partial<AssistantSettings>,
 ): Promise<PaginatedResponseAssistantPublic> => {
   const { settings, apiBaseUrl } = useAssistantStore.getState();
   const skHeaders = getSkHeaders(options, settings);
@@ -361,7 +360,7 @@ export const getMyFiles = async (
 
 export const getFile = async (
   id: string,
-  options?: Partial<AssistantSettings>
+  options?: Partial<AssistantSettings>,
 ): Promise<FilePublic> => {
   const { settings, apiBaseUrl } = useAssistantStore.getState();
   const skHeaders = getSkHeaders(options, settings);
@@ -386,7 +385,7 @@ export const getFile = async (
 
 export const uploadFile = async (
   file: File,
-  options?: Partial<AssistantSettings>
+  options?: Partial<AssistantSettings>,
 ): Promise<FilePublic> => {
   const { settings, apiBaseUrl } = useAssistantStore.getState();
   const skHeaders = getSkHeaders(options, settings);

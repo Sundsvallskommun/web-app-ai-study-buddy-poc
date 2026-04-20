@@ -1,3 +1,4 @@
+import { Message } from "@sk-web-gui/ai";
 import { AssistantFeedback } from "./assistant";
 
 export interface Reference {
@@ -46,21 +47,11 @@ export interface SessionsResponse {
   items: SessionSummary[];
 }
 
-export interface SessionMessage {
-  id: string;
-  answer: string;
-  question: string;
-  completion_model: CompletionModel;
-  references: Reference[];
-  created_at: Date;
-  updated_at: Date;
-}
-
 export interface SessionResponse {
   id: string;
   name: string;
   feedback?: AssistantFeedback;
   created_at: Date;
   updated_at: Date;
-  messages: SessionMessage[];
+  messages: Message[];
 }
