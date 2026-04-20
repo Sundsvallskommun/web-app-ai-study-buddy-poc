@@ -1,3 +1,4 @@
+import { SessionFeedback } from "@sk-web-gui/ai";
 import { ResourcePermission } from "./data-contracts";
 import { ChatHistory } from "./history";
 
@@ -34,15 +35,13 @@ export interface AssistantInfo {
 }
 
 export interface AssistantSession {
-  assistantId?: string;
   name?: string;
   id: string;
   history: ChatHistory;
-  feedback?: AssistantFeedback;
+  feedback?: SessionFeedback;
   updated_at: Date;
   created_at: Date;
 }
-
 export interface SkHeaders {
   _apikey?: string;
   _skuser?: string;
